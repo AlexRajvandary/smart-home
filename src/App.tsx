@@ -534,9 +534,12 @@ const App = () => {
                               borderRadius: 12,
                               border: '1px solid rgba(148,163,184,0.4)',
                             }}
-                            formatter={(value: number, name: string) =>
-                              name === 'consumption' ? [`${value} кВт·ч`, 'Факт'] : [`${value} кВт·ч`, 'Цель']
-                            }
+                            formatter={(value: number | undefined, name: string) => {
+                              const v = value ?? 0
+                              return name === 'consumption'
+                                ? [`${v} кВт·ч`, 'Факт']
+                                : [`${v} кВт·ч`, 'Цель']
+                            }}
                           />
                           <Legend formatter={(value) => (value === 'consumption' ? 'Факт' : 'Цель')} />
                           <ReferenceLine
@@ -638,11 +641,12 @@ const App = () => {
                               borderRadius: 12,
                               border: '1px solid rgba(148,163,184,0.4)',
                             }}
-                            formatter={(value: number, name: string) =>
-                              name === 'temperature'
-                                ? [`${value}°C`, t.temperatureLegend]
-                                : [value === 1 ? t.heatingOnLabel : t.heatingOffLabel, t.heaterLegend]
-                            }
+                            formatter={(value: number | undefined, name: string) => {
+                              const v = value ?? 0
+                              return name === 'temperature'
+                                ? [`${v}°C`, t.temperatureLegend]
+                                : [v === 1 ? t.heatingOnLabel : t.heatingOffLabel, t.heaterLegend]
+                            }}
                           />
                           <Legend
                             formatter={(value) =>
