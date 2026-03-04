@@ -240,6 +240,24 @@ const App = () => {
           ? 'Last 7 days'
           : 'Last 30 days'
 
+  const formatHeatingTooltip = (value: unknown, name?: unknown) => {
+    const numeric =
+      typeof value === 'number' ? value : value != null ? Number(value) || 0 : 0
+    return name === 'consumption'
+      ? [`${numeric} кВт·ч`, 'Факт']
+      : [`${numeric} кВт·ч`, 'Цель']
+  }
+
+  const formatTemperatureTooltip = (value: unknown, name?: unknown) => {
+    const numeric =
+      typeof value === 'number' ? value : value != null ? Number(value) || 0 : 0
+    if (name === 'temperature') {
+      return [`${numeric}°C`, t.temperatureLegend]
+    }
+    const isOn = numeric === 1
+    return [isOn ? t.heatingOnLabel : t.heatingOffLabel, t.heaterLegend]
+  }
+
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -534,12 +552,7 @@ const App = () => {
                               borderRadius: 12,
                               border: '1px solid rgba(148,163,184,0.4)',
                             }}
-                            formatter={(value: number | undefined, name: string) => {
-                              const v = value ?? 0
-                              return name === 'consumption'
-                                ? [`${v} кВт·ч`, 'Факт']
-                                : [`${v} кВт·ч`, 'Цель']
-                            }}
+                            formatter={formatHeatingTooltip}
                           />
                           <Legend formatter={(value) => (value === 'consumption' ? 'Факт' : 'Цель')} />
                           <ReferenceLine
@@ -641,12 +654,7 @@ const App = () => {
                               borderRadius: 12,
                               border: '1px solid rgba(148,163,184,0.4)',
                             }}
-                            formatter={(value: number | undefined, name: string) => {
-                              const v = value ?? 0
-                              return name === 'temperature'
-                                ? [`${v}°C`, t.temperatureLegend]
-                                : [v === 1 ? t.heatingOnLabel : t.heatingOffLabel, t.heaterLegend]
-                            }}
+                            formatter={formatTemperatureTooltip}
                           />
                           <Legend
                             formatter={(value) =>
